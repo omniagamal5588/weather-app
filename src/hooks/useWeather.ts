@@ -5,7 +5,7 @@ import { RootState } from '@/store/store';
 import { setCity } from '@/store/weather/weatherSlice';
 import { fetchWeatherData } from '@/store/weather/weatherActions';
 import { toast } from 'react-toastify';
-
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 const apiKey = process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY;
 
 interface CitySuggestion {
@@ -76,23 +76,22 @@ export function useWeather() {
     const cityName = selectedCity.split(',')[0].trim();
     dispatch(setCity(cityName));
     try {
-      const resultAction = await dispatch(fetchWeatherData(cityName));
-      if (fetchWeatherData.fulfilled.match(resultAction)) {
-        toast.success(`Weather data loaded for ${cityName}`, {
-          position: "top-right",
-          autoClose: 5000,
-        });
-      } else if (fetchWeatherData.rejected.match(resultAction)) {
-        throw new Error(resultAction.error.message || 'Failed to fetch weather data');
-      }
+      const result = await dispatch(fetchWeatherData(cityName)).unwrap();
+      toast.success(`Weather data loaded for ${cityName}`, {
+        position: "top-right",
+        autoClose: 5000,
+      });
+      return result;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       toast.error(`Failed to load data for "${cityName}": ${errorMessage}`, {
         position: "top-right",
         autoClose: 5000,
       });
+      throw error;
+    } finally {
+      setSuggestions([]);
     }
-    setSuggestions([]);
   };
 
   useEffect(() => {
