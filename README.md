@@ -31,14 +31,14 @@ Weather application with real-time data, city suggestions, and dark/light mode.
 
  ## Project Structure
  weather-Dashboard/
-├── public/            # Static files
+├── public/            
 ├── src/
-│   ├── app/           # Home page & layout
-│   ├── components/    # Project components
-│   ├── store/         # Redux Toolkit files
-│   ├── hooks/         # Custom hooks
-│   └── styles/        # Global styles
-├── .env.local         # Environment variables
-├── next.config.js     # Next.js config
+│   ├── app/           
+│   ├── _components/   
+│   ├── store/         
+│   ├── hooks/         
+│   └── context/        
+├── .env.local         
+├── next.config.js     
 └── package.json
 
