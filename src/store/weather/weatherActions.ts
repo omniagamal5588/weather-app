@@ -1,9 +1,21 @@
+// src/store/weather/weatherActions.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const apiKey = process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY;
 
-if (!apiKey) {
-  throw new Error('API key is missing. Please check your .env.local file.');
+interface WeatherResponse {
+  name: string;
+  main: {
+    temp: number;
+    humidity: number;
+  };
+  wind: {
+    speed: number;
+  };
+  weather: Array<{
+    description: string;
+    icon: string;
+  }>;
 }
 
 export type WeatherDataPayload = {
@@ -15,26 +27,25 @@ export type WeatherDataPayload = {
   icon: string;
 };
 
-interface WeatherAPIError {
-  message?: string;
-  cod?: string | number;
-}
-
-export const fetchWeatherData = createAsyncThunk(
+export const fetchWeatherData = createAsyncThunk<
+  WeatherDataPayload,
+  string,
+  { rejectValue: string }
+>(
   'weather/fetchWeatherData',
   async (city: string, { rejectWithValue }) => {
     try {
-      const res = await fetch(
+      const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric`
       );
       
-      if (!res.ok) {
-        const errorData: WeatherAPIError = await res.json();
-        throw new Error(errorData.message || 'Failed to fetch weather data');
+      if (!response.ok) {
+        const error = await response.json();
+        return rejectWithValue(error.message || 'Failed to fetch weather data');
       }
 
-      const data = await res.json();
-
+      const data: WeatherResponse = await response.json();
+      
       return {
         city: data.name,
         temperature: Math.round(data.main.temp),
@@ -42,8 +53,8 @@ export const fetchWeatherData = createAsyncThunk(
         windSpeed: data.wind.speed,
         description: data.weather[0].description,
         icon: data.weather[0].icon,
-      } satisfies WeatherDataPayload;
-    } catch (error: unknown) {
+      };
+    } catch (error) {
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       }

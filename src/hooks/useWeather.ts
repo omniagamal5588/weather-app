@@ -17,10 +17,11 @@ interface CitySuggestion {
 }
 
 export function useWeather() {
-  const dispatch = useDispatch();
-  const { city, loading, error, data } = useSelector((state: RootState) => state.weather);
+  const dispatch = useAppDispatch();
+  const { city, loading, error, data } = useAppSelector((state) => state.weather);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
 
   useEffect(() => {
     const abortController = new AbortController();
