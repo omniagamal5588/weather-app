@@ -12,7 +12,6 @@ export default function Home() {
   const {
     city,
     loading,
-    error,
     data,
     suggestions,
     loadingSuggestions,

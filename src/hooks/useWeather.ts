@@ -8,6 +8,14 @@ import { toast } from 'react-toastify';
 
 const apiKey = process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY;
 
+interface CitySuggestion {
+  name: string;
+  country: string;
+  state?: string;
+  lat?: number;
+  lon?: number;
+}
+
 export function useWeather() {
   const dispatch = useDispatch();
   const { city, loading, error, data } = useSelector((state: RootState) => state.weather);
@@ -32,18 +40,18 @@ export function useWeather() {
 
         if (!res.ok) throw new Error('Failed to fetch suggestions');
 
-        const data = await res.json();
+        const data: CitySuggestion[] = await res.json();
         const uniqueCities = new Set<string>();
         
-        data.forEach((item: any) => {
+        data.forEach((item) => {
           if (item.name && item.country) {
             uniqueCities.add(`${item.name}, ${item.country}`);
           }
         });
 
         setSuggestions(Array.from(uniqueCities));
-      } catch (err: any) {
-        if (err.name !== 'AbortError') {
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== 'AbortError') {
           console.error(err.message);
           setSuggestions([]);
         }
@@ -74,13 +82,15 @@ export function useWeather() {
         autoClose: 5000,
       });
     } catch (error) {
-      toast.error(`City "${cityName}" not found! Please try another name.`, {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+      toast.error(`Failed to load data for "${cityName}": ${errorMessage}`, {
         position: "top-right",
         autoClose: 5000,
       });
     }
     setSuggestions([]);
   };
+
   useEffect(() => {
     if (error) {
       toast.error(error, {

@@ -15,6 +15,11 @@ export type WeatherDataPayload = {
   icon: string;
 };
 
+interface WeatherAPIError {
+  message?: string;
+  cod?: string | number;
+}
+
 export const fetchWeatherData = createAsyncThunk(
   'weather/fetchWeatherData',
   async (city: string, { rejectWithValue }) => {
@@ -24,7 +29,7 @@ export const fetchWeatherData = createAsyncThunk(
       );
       
       if (!res.ok) {
-        const errorData = await res.json();
+        const errorData: WeatherAPIError = await res.json();
         throw new Error(errorData.message || 'Failed to fetch weather data');
       }
 
@@ -38,8 +43,11 @@ export const fetchWeatherData = createAsyncThunk(
         description: data.weather[0].description,
         icon: data.weather[0].icon,
       } satisfies WeatherDataPayload;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to fetch weather data');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unknown error occurred');
     }
   }
 );

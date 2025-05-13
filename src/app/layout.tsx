@@ -1,22 +1,22 @@
 'use client'
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+
+
 import { Provider } from 'react-redux';
 import { store } from '@/store/store';
-import {Roboto} from 'next/font/google';
+
 import { ThemeProvider } from '@/context/ThemeContext';
 import "./globals.css";
 
-const geistSans = Roboto({
-  subsets: ["latin"],
-  variable: "--font-Roboto",
-  weight: "700",
-});
+// const geistSans = Roboto({
+//   subsets: ["latin"],
+//   variable: "--font-Roboto",
+//   weight: "700",
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 // export const metadata: Metadata = {
   
