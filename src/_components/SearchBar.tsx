@@ -11,7 +11,7 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ 
   value, 
   onChange, 
-  placeholder = 'Enter city name...' 
+ 
 }) => {
   const { theme } = useTheme();
   return (
