@@ -76,11 +76,15 @@ export function useWeather() {
     const cityName = selectedCity.split(',')[0].trim();
     dispatch(setCity(cityName));
     try {
-      await dispatch(fetchWeatherData(cityName));
-      toast.success(`Weather data loaded for ${cityName}`, {
-        position: "top-right",
-        autoClose: 5000,
-      });
+      const resultAction = await dispatch(fetchWeatherData(cityName));
+      if (fetchWeatherData.fulfilled.match(resultAction)) {
+        toast.success(`Weather data loaded for ${cityName}`, {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      } else if (fetchWeatherData.rejected.match(resultAction)) {
+        throw new Error(resultAction.error.message || 'Failed to fetch weather data');
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
       toast.error(`Failed to load data for "${cityName}": ${errorMessage}`, {
