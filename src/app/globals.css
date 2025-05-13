@@ -1,4 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Sans :wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono :wght@400;500;700&display=swap');
 @import "tailwindcss";
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-dark: #1e40af;
+  --primary-light: #3b82f6;
+}
+
+.dark {
+  --color-bg: #111827;
+  --color-text: #f3f4f6;
+}
+
+.light {
+  --color-bg: #f3f4f6;
+  --color-text: #111827;
+}
+
+.font-sans {
+  font-family: 'Geist Sans', sans-serif;
+}
+
+.font-mono {
+  font-family: 'Geist Mono', monospace;
+}
 
 :root {
   --background: #ffffff;
