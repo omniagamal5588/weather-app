@@ -1,7 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
 import { setCity } from '@/store/weather/weatherSlice';
 import { fetchWeatherData } from '@/store/weather/weatherActions';
 import { toast } from 'react-toastify';
